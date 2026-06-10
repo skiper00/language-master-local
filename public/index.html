@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Master</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="logo-anim">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>LangMaster</h1>
+            <p>Загрузка знаний...</p>
+        </div>
+    </div>
+
+    <div id="auth-screen" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="fas fa-user-graduate logo-icon"></i>
+                <h2 id="auth-title">Вход в систему</h2>
+            </div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-pass" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="primary-btn">Войти</button>
+                <p class="switch-auth">Нет аккаунта? <a href="#" onclick="ui.showRegister()">Зарегистрироваться</a></p>
+            </form>
+
+            <form id="register-form" style="display: none;">
+                <div class="role-selector">
+                    <label class="radio-label">
+                        <input type="radio" name="role" value="student" checked> <span>🎓 Ученик</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="role" value="teacher"> <span>👨‍🏫 Учитель</span>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="reg-name" placeholder="Ваше Имя" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="reg-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="reg-pass" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="primary-btn">Создать аккаунт</button>
+                <p class="switch-auth">Есть аккаунт? <a href="#" onclick="ui.showLogin()">Войти</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-container" style="display: none;">
+        <button id="burger-btn" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>LangMaster</span>
+            </div>
+
+            <div class="user-profile-mini">
+                <div class="avatar-container" onclick="app.openAvatarSelector()" style="cursor:pointer"
+                    title="Сменить аватарку">
+                    <img id="sidebar-avatar" src="" class="mini-avatar"
+                        style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);">
+                    <div class="edit-avatar-btn"><i class="fas fa-pen"></i></div>
+                </div>
+                <div class="user-info">
+                    <span id="user-name-display">Имя</span>
+                    <small id="user-id-display">ID: 0</small>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button id="btn-home" class="nav-btn" onclick="app.tab('home')">
+                    <i class="fas fa-home"></i> <span>Главная</span>
+                </button>
+
+                <div id="student-nav">
+                    <button id="btn-lessons" class="nav-btn" onclick="app.tab('lessons')">
+                        <i class="fas fa-book-open"></i> <span>Уроки</span>
+                    </button>
+                    <button id="btn-dictionary" class="nav-btn" onclick="app.tab('dictionary')">
+                        <i class="fas fa-book"></i> <span>Словарь</span>
+                    </button>
+                    <button id="btn-quiz" class="nav-btn" onclick="app.tab('quiz')">
+                        <i class="fas fa-dumbbell"></i> <span>Тренировка</span>
+                    </button>
+                </div>
+
+                <div id="teacher-nav" style="display: none;">
+                    <button id="btn-dashboard" class="nav-btn" onclick="app.tab('dashboard')">
+                        <i class="fas fa-chalkboard-teacher"></i> <span>Мои классы</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="language-switch">
+                <select id="lang-switch">
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="en">🇬🇧 English</option>
+                </select>
+            </div>
+
+            <button class="nav-btn logout-btn" onclick="auth.logout()"
+                style="margin-top: 10px; background: rgba(231, 76, 60, 0.1); color: #e74c3c;">
+                <i class="fas fa-sign-out-alt"></i> <span>Выйти</span>
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div id="content-area"></div>
+        </div>
+    </div>
+    <div id="avatar-modal" class="modal-overlay" onclick="if(event.target === this) this.classList.remove('active')">
+        <div class="student-modal" style="text-align:center; max-width:400px;">
+            <button class="close-modal"
+                onclick="document.getElementById('avatar-modal').classList.remove('active')">×</button>
+            <h3 style="color:#2c3e50; margin-bottom:20px;">Выберите персонажа</h3>
+            <div id="avatar-grid" class="avatar-grid"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
